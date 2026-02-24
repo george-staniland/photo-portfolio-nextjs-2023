@@ -221,7 +221,7 @@ export default function Footer(props: Props) {
             </LeftSection>
             <RightSection>
                 <Typography variant="spaceGroteskSmall" >
-                    © George Staniland Photography 2023
+                    © George Staniland Photography 2026
                 </Typography>
             </RightSection>
         </FooterContainer>

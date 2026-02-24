@@ -104,7 +104,7 @@ const DesktopGallery = (props: Props) => {
     const { gallery, setMetaData, setMetaVisible } = props;
     const { images } = gallery;
     return (
-        <GalleryContainer>
+        <GalleryContainer >
             <GallerySection1Flex >
                 <Box
                     width="50%"

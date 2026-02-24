@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import imageUrlBuilder from '@sanity/image-url';
 import { createClient } from 'next-sanity';
-import { useNextSanityImage } from 'next-sanity-image';
 import { useSpring, animated } from "@react-spring/web";
 import Missing from '../public/assets/missing.png'
 import { ProjectModel } from "models/project";
@@ -94,8 +93,6 @@ export default function Project(props: Props) {
         return builder.image(source);
     }
 
-    const imageProps = useNextSanityImage(client, cover_image);
-
     return (
         <Link href={`/${projectCategory}/${project_slug.current}`}>
             <SingleProject {...bind()}>
@@ -126,17 +123,15 @@ export default function Project(props: Props) {
                         </Box>
                     }
                     {!isMobile &&
-                        <Box position="relative">
+                        <Box position="relative" sx={{ width: '300px', aspectRatio: '7/6' }}>
                             <Image
-                                {...imageProps}
+                                src={cover_image ? urlFor(cover_image.asset._ref).quality(100).url() : Missing}
+                                alt="a photo on gs website"
+                                fill
                                 style={{
-                                    width: '300px',
-                                    height: 'auto',
-                                    maxHeight: '360px',
                                     objectFit: 'cover',
                                     objectPosition: 'center',
                                 }}
-                                alt="a photo on gs website"
                                 sizes="(max-width: 600px) 100vw, 300px"
                             />
                         </Box>
