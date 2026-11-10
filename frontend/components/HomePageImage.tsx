@@ -1,5 +1,6 @@
 import imageUrlBuilder from '@sanity/image-url'
 import { createClient } from 'next-sanity';
+import { sanityImageLoader } from 'lib/sanityImageLoader';
 import { useHover } from '@use-gesture/react';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import Image from 'next/image';
@@ -62,7 +63,7 @@ export default function HomePageImage(homePageImageProps: HomePageImageProps) {
 
     const builder = imageUrlBuilder(client);
 
-    function urlFor(source: String) {
+    function urlFor(source: SanityImage) {
         return builder.image(source);
     }
 
@@ -70,11 +71,12 @@ export default function HomePageImage(homePageImageProps: HomePageImageProps) {
         <ImageContainer {...bind(imageMetaData)} paddingTop={paddingTop}>
 
             <Image
-                src={image ? urlFor(image.asset._id).quality(100).url() : Missing}
+                loader={image ? sanityImageLoader : undefined}
+                src={image ? urlFor(image).url() : Missing}
                 alt={altText}
                 fill
                 priority={priority}
-                quality="100"
+                quality={100}
                 style={{
                     objectFit: objectFit,
                     objectPosition: isXLarge ? "center" : objectPosition,

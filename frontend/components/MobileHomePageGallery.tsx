@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { createClient } from 'next-sanity';
 import imageUrlBuilder from '@sanity/image-url';
+import { sanityImageLoader } from 'lib/sanityImageLoader';
 import Image from 'next/image';
 import { SanityImage } from 'models/models';
 
@@ -123,11 +124,13 @@ const MobileImage = (props: MobileImageProps) => {
     return (
         <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3' }}>
             <Image
-                src={urlFor(image).quality(100).url()}
+                loader={sanityImageLoader}
+                src={urlFor(image).url()}
                 alt="image on gs website"
                 fill
                 sizes="100vw"
                 priority={priority}
+                quality={100}
                 placeholder="blur"
                 blurDataURL={image.asset.metadata.lqip}
                 style={{ objectFit: 'contain' }}
