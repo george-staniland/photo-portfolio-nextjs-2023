@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { createClient } from 'next-sanity';
+import imageUrlBuilder from '@sanity/image-url';
 import Image from 'next/image';
-import { useNextSanityImage } from 'next-sanity-image';
 import { SanityImage } from 'models/models';
 
 const MobileGalleryContainer = styled(Box, {
@@ -105,25 +105,33 @@ interface MobileImageProps {
     priority?: boolean;
 }
 
-const MobileImage = (props: MobileImageProps) => {
-    const { image, width, height, priority = false } = props;
-    const imageProps = useNextSanityImage(client, image);
-    return (
-        <Image
-            {...imageProps}
-            style={{ height: 'auto', width: '100%' }}
-            alt="image on gs website"
-            sizes="100vw"
-            priority={priority}
-            placeholder='blur'
-            blurDataURL={image.asset.metadata.lqip}
-        />
-    )
-}
-
 const client = createClient({
     projectId: 'nimz3ndn',
     dataset: 'production',
     apiVersion: '2023-01-01',
     useCdn: false,
 });
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source: SanityImage) {
+    return builder.image(source);
+}
+
+const MobileImage = (props: MobileImageProps) => {
+    const { image, width, height, priority = false } = props;
+    return (
+        <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3' }}>
+            <Image
+                src={urlFor(image).quality(100).url()}
+                alt="image on gs website"
+                fill
+                sizes="100vw"
+                priority={priority}
+                placeholder="blur"
+                blurDataURL={image.asset.metadata.lqip}
+                style={{ objectFit: 'contain' }}
+            />
+        </Box>
+    );
+};

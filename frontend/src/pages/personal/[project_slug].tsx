@@ -4,7 +4,7 @@ import Footer from 'components/Footer';
 import Navbar from 'components/Navbar';
 import ScrollProgress from 'components/ScrollProgress';
 import { createClient } from 'next-sanity';
-import { useNextSanityImage } from 'next-sanity-image';
+import imageUrlBuilder from '@sanity/image-url';
 import Image from 'next/image';
 import { SanityImage } from 'models/models';
 
@@ -38,63 +38,54 @@ interface ImgProps {
     index: number;
 }
 
+const client = createClient({
+    projectId: 'nimz3ndn',
+    dataset: 'production',
+    apiVersion: '2023-01-01',
+    useCdn: false,
+});
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source: SanityImage) {
+    return builder.image(source);
+}
+
 const ProjectSingleImage = (props: ImgProps) => {
     const { image, index } = props;
-    const imageProps = useNextSanityImage(client, image);
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.up('md'));
+    const imageUrl = urlFor(image).quality(100).url();
 
     return (
         <>
             {index === 0 ?
                 <ImageContainerFirstImage>
-                    {isTablet ?
+                    <Box sx={{ position: 'relative', width: '100%', ...(isTablet ? { height: '100%' } : { aspectRatio: '4/3' }) }}>
                         <Image
-                            {...imageProps}
-                            style={{ height: '100%', width: 'auto' }}
+                            src={imageUrl}
                             alt="test"
-                            sizes="(max-width: 1200px) 70vw, 97vw"
-                            placeholder='blur'
+                            fill
+                            sizes={isTablet ? "(max-width: 1200px) 70vw, 97vw" : "100vw"}
+                            placeholder="blur"
                             blurDataURL={image.asset.metadata.lqip}
+                            style={{ objectFit: 'contain' }}
                         />
-                        :
-                        <Image
-                            {...imageProps}
-                            style={{
-                                height: 'auto',
-                                width: '100%',
-                                objectFit: 'contain',
-                            }}
-                            alt="test"
-                            sizes="100vw"
-                            placeholder='blur'
-                            blurDataURL={image.asset.metadata.lqip}
-                        />}
+                    </Box>
                 </ImageContainerFirstImage>
                 :
                 <ImageContainer>
-                    {isTablet ?
+                    <Box sx={{ position: 'relative', width: '100%', ...(isTablet ? { height: '100%' } : { aspectRatio: '4/3' }) }}>
                         <Image
-                            {...imageProps}
-                            style={{ height: '100%', width: 'auto' }}
+                            src={imageUrl}
                             alt="test"
-                            sizes="(max-width: 1200px) 70vw, 97vw"
-                            placeholder='blur'
+                            fill
+                            sizes={isTablet ? "(max-width: 1200px) 70vw, 97vw" : "100vw"}
+                            placeholder="blur"
                             blurDataURL={image.asset.metadata.lqip}
+                            style={{ objectFit: 'contain' }}
                         />
-                        :
-                        <Image
-                            {...imageProps}
-                            style={{
-                                height: 'auto',
-                                width: '100%',
-                                objectFit: 'contain',
-                            }}
-                            alt="test"
-                            sizes="100vw"
-                            placeholder='blur'
-                            blurDataURL={image.asset.metadata.lqip}
-                        />}
+                    </Box>
                 </ImageContainer>
             }
         </>
@@ -122,13 +113,6 @@ const Project = (props: Props) => {
         </>
     )
 }
-
-const client = createClient({
-    projectId: 'nimz3ndn',
-    dataset: 'production',
-    apiVersion: '2023-01-01',
-    useCdn: false,
-});
 
 interface ProjectContext {
     params: {
