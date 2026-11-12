@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { GalleryImage, HomeGallery } from 'models/models';
-import BlurUpImage from './BlurUpImage';
+import Image from 'next/image';
 
 const MobileGalleryContainer = styled(Box, {
     label: 'homepage-gallery-container-mobile',
@@ -104,12 +104,17 @@ const MobileImage = (props: MobileImageProps) => {
     if (!image) return null;
     return (
         <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3' }}>
-            <BlurUpImage
-                image={image}
+            <Image
+                src={image.url}
                 alt="image on gs website"
+                fill
                 sizes="100vw"
-                priority={priority}
-                objectFit="contain"
+                quality={90}
+                preload={priority}
+                loading={priority ? 'eager' : 'lazy'}
+                placeholder="blur"
+                blurDataURL={image.lqip}
+                style={{ objectFit: 'contain' }}
             />
         </Box>
     );

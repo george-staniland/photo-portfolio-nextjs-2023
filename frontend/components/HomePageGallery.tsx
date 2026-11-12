@@ -13,7 +13,6 @@ const GalleryContainer = styled(Box, {
         padding: "0 60px 0 30px",
         marginTop: "150px",
     },
-    // Mobile gallery is shown below `md`; keep this one out of the layout (and out of lazy image loading).
     [theme.breakpoints.down('md')]: {
         display: 'none',
     },

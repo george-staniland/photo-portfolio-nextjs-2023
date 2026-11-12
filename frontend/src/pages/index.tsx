@@ -29,7 +29,7 @@ export default function Home(props: Props) {
     <>
       <Head>
         <title>GS - Photography</title>
-        <meta name="description" content="Focused on various long and short-term photography art projects, and taking on commissioned work for selected clients." />
+        <meta name="description" content="Focused on various long and short-term photography art projects, taking on commissioned work for selected clients." />
       </Head>
       <ScrollProgress>
         <Navbar navMetaData={navMetaData} metaVisible={metaVisible} hasMetadata />
@@ -56,7 +56,11 @@ const HOME_GALLERY_QUERY = `*[_type=="image_galleries" && _id=="25debf56-bfaa-47
       "url": image.asset->url,
       "lqip": image.asset->metadata.lqip,
       "width": image.asset->metadata.dimensions.width,
-      "height": image.asset->metadata.dimensions.height
+      "height": image.asset->metadata.dimensions.height,
+      "palette": {
+        "dominant": image.asset->metadata.palette.dominant.background,
+        "lightMuted": image.asset->metadata.palette.lightMuted.background
+      }
     }
   }
 }`;
