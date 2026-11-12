@@ -1,10 +1,7 @@
 import React from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
-import { createClient } from 'next-sanity';
-import imageUrlBuilder from '@sanity/image-url';
-import { sanityImageLoader } from 'lib/sanityImageLoader';
-import Image from 'next/image';
-import { SanityImage } from 'models/models';
+import { GalleryImage, HomeGallery } from 'models/models';
+import BlurUpImage from './BlurUpImage';
 
 const MobileGalleryContainer = styled(Box, {
     label: 'homepage-gallery-container-mobile',
@@ -26,11 +23,7 @@ const ImageWrap = styled(Box)(() => ({
 
 
 interface Props {
-    gallery: {
-        images: {
-            image: SanityImage;
-        }[],
-    };
+    gallery: HomeGallery;
 }
 
 export default function MobileHomePageGallery(props: Props) {
@@ -101,39 +94,22 @@ const MobileGallery = (props: Props) => {
 interface MobileImageProps {
     width: string;
     height: string;
-    image: SanityImage;
+    image?: GalleryImage;
     title?: string;
     priority?: boolean;
 }
 
-const client = createClient({
-    projectId: 'nimz3ndn',
-    dataset: 'production',
-    apiVersion: '2023-01-01',
-    useCdn: false,
-});
-
-const builder = imageUrlBuilder(client);
-
-function urlFor(source: SanityImage) {
-    return builder.image(source);
-}
-
 const MobileImage = (props: MobileImageProps) => {
-    const { image, width, height, priority = false } = props;
+    const { image, priority = false } = props;
+    if (!image) return null;
     return (
         <Box sx={{ position: 'relative', width: '100%', aspectRatio: '4/3' }}>
-            <Image
-                loader={sanityImageLoader}
-                src={urlFor(image).url()}
+            <BlurUpImage
+                image={image}
                 alt="image on gs website"
-                fill
                 sizes="100vw"
                 priority={priority}
-                quality={100}
-                placeholder="blur"
-                blurDataURL={image.asset.metadata.lqip}
-                style={{ objectFit: 'contain' }}
+                objectFit="contain"
             />
         </Box>
     );

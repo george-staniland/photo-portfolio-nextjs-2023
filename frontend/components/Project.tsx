@@ -125,7 +125,7 @@ export default function Project(props: Props) {
                     {!isMobile &&
                         <Box position="relative" sx={{ width: '300px', aspectRatio: '7/6' }}>
                             <Image
-                                src={cover_image ? urlFor(cover_image.asset._ref).quality(100).url() : Missing}
+                                src={cover_image ? urlFor(cover_image.asset._ref).quality(85).url() : Missing}
                                 alt="a photo on gs website"
                                 fill
                                 style={{

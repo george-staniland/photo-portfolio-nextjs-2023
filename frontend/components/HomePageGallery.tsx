@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import HomePageImage from './HomePageImage';
-import { SanityImage } from 'models/models';
+import { HomeGallery } from 'models/models';
 
 const GalleryContainer = styled(Box, {
     label: 'homepage-gallery-container',
@@ -12,6 +12,10 @@ const GalleryContainer = styled(Box, {
     [theme.breakpoints.up('sm')]: {
         padding: "0 60px 0 30px",
         marginTop: "150px",
+    },
+    // Mobile gallery is shown below `md`; keep this one out of the layout (and out of lazy image loading).
+    [theme.breakpoints.down('md')]: {
+        display: 'none',
     },
 }));
 
@@ -85,11 +89,7 @@ const Section5Child2 = styled(SectionChild)(({ theme }) => ({
 interface Props {
     setMetaData: React.Dispatch<React.SetStateAction<{}>>;
     setMetaVisible: React.Dispatch<React.SetStateAction<boolean>>;
-    gallery: {
-        images: {
-            image: SanityImage;
-        }[],
-    };
+    gallery: HomeGallery;
 }
 
 export default function HomePageGallery(props: Props) {
@@ -157,6 +157,7 @@ const DesktopGallery = (props: Props) => {
                             setMetaVisible={setMetaVisible}
                             sizes="(max-width: 768px) 100vw, 40vw"
                             objectPosition="right"
+                            priority
                         />
                     </Box>
                 </Box>

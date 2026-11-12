@@ -1,22 +1,12 @@
-import imageUrlBuilder from '@sanity/image-url'
-import { createClient } from 'next-sanity';
-import { sanityImageLoader } from 'lib/sanityImageLoader';
 import { useHover } from '@use-gesture/react';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
-import Image from 'next/image';
 import Missing from '../public/assets/missing.png';
-import { SanityImage } from 'models/models';
-
-const client = createClient({
-    projectId: 'nimz3ndn',
-    dataset: 'production',
-    apiVersion: '2023-01-01',
-    useCdn: false,
-});
+import { GalleryEntry } from 'models/models';
+import BlurUpImage from './BlurUpImage';
 
 const ImageContainer = styled(Box, {
     label: 'image-container',
-})(({ theme }) => ({
+})(() => ({
     position: 'relative',
     flexGrow: '1',
 }));
@@ -29,17 +19,11 @@ interface HomePageImageProps {
     sizes?: string;
     priority?: boolean;
     paddingTop?: string;
-    imageData: {
-        altText?: string;
-        imageMetaData?: {};
-        image?: SanityImage,
-    },
+    imageData: GalleryEntry;
     title?: string;
 }
 
 export default function HomePageImage(homePageImageProps: HomePageImageProps) {
-
-
     const {
         objectFit = "contain",
         objectPosition = "center",
@@ -48,41 +32,46 @@ export default function HomePageImage(homePageImageProps: HomePageImageProps) {
         paddingTop = "",
         setMetaData,
         setMetaVisible,
-        imageData
+        imageData,
     } = homePageImageProps;
 
     const theme = useTheme();
     const isXLarge = useMediaQuery(theme.breakpoints.up('xxl'));
 
     const { image, imageMetaData, altText = '' } = imageData;
+    const position = isXLarge ? "center" : objectPosition;
 
     const bind = useHover(({ args, hovering }) => {
         setMetaData(args[0]);
         setMetaVisible(hovering ? true : false);
     });
 
-    const builder = imageUrlBuilder(client);
-
-    function urlFor(source: SanityImage) {
-        return builder.image(source);
-    }
-
     return (
         <ImageContainer {...bind(imageMetaData)} paddingTop={paddingTop}>
-
-            <Image
-                loader={image ? sanityImageLoader : undefined}
-                src={image ? urlFor(image).url() : Missing}
-                alt={altText}
-                fill
-                priority={priority}
-                quality={100}
-                style={{
-                    objectFit: objectFit,
-                    objectPosition: isXLarge ? "center" : objectPosition,
-                }}
-                sizes={sizes}
-            />
+            {image ? (
+                <BlurUpImage
+                    image={image}
+                    alt={altText}
+                    sizes={sizes}
+                    priority={priority}
+                    objectFit={objectFit}
+                    objectPosition={position}
+                />
+            ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    src={Missing.src}
+                    alt={altText}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit,
+                        objectPosition: position,
+                    }}
+                />
+            )}
         </ImageContainer>
     )
 }
