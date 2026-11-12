@@ -17,6 +17,11 @@ export interface GalleryImage {
     height: number;
 }
 
+export interface ProjectData {
+    project_title?: string;
+    images: (GalleryImage | null)[];
+}
+
 export interface GalleryEntry {
     altText?: string;
     imageMetaData?: {

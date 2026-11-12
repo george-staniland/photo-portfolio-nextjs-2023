@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import Project from 'components/Project';
-import { createClient } from 'next-sanity';
+import { getProjectsByCategory } from 'lib/getProjects';
 import { Box, styled } from "@mui/material"
 import { ProjectModel } from '../../models/project';
 
@@ -44,16 +44,8 @@ export default function Commisions(props: Props) {
     )
 }
 
-// TO DO: use tokens here
-const client = createClient({
-    projectId: 'nimz3ndn',
-    dataset: 'production',
-    apiVersion: '2023-01-01',
-    useCdn: false,
-});
-
 export async function getStaticProps() {
-    const commissionedProjects = await client.fetch('*[_type == "projects" && project_category in ["personal"]] | order(orderRank)');
+    const commissionedProjects = await getProjectsByCategory('personal');
 
     return {
         props: {

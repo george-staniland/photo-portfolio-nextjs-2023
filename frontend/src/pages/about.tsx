@@ -80,7 +80,7 @@ const AboutDesktop = () => {
                         src={Jono}
                         fill
                         quality={100}
-                        alt="an image on gs photo"
+                        alt="test"
                         style={{
                             objectFit: 'contain',
                         }}
@@ -138,7 +138,7 @@ export default function About() {
         <>
             <Head>
                 <title>George Staniland - About</title>
-                <meta name="description" content="George is focused on various long and short-term photography art projects, additionally taking on commissioned work for selected clients." />
+                <meta name="description" content="George is focused on various long and short-term photography art projects, taking on commissioned work for selected clients." />
             </Head>
             <Navbar />
             {isTablet ? <AboutDesktop /> : <AboutMobile />}
